@@ -112,6 +112,7 @@ read_in(FILE *fp)
 	int exit_flg, agr_flg;
 	uint64_t nproto, i;
 	char buf[AGURIM_BUFSIZ];
+	int filter_idx;
 
 	agr_flg = 0;
 	exit_flg = 0;
@@ -124,7 +125,6 @@ read_in(FILE *fp)
 			if (agr_flg) {
 				agr_flg = 0;
 				if (inparam.mode == AGURIM_PLOT_MODE){
-					//printf("XXX [%d] start_time:%d end_time:%d \n", inparam.plot_index, inparam.start_time, inparam.end_time );
 					plot_run();
 				} else {
 					if (query.outfmt != REAGGREGATION)
@@ -150,11 +150,11 @@ read_in(FILE *fp)
 			continue;
 
 		/* is target odflow? */
-		if (!is_filter(&odflow, odproto, nproto))
+		if ((filter_idx = is_filter(&odflow, odproto, nproto)) < 0)
 			continue;
 
 		if (inparam.mode != AGURIM_PLOT_MODE){
-			/* add odflows */
+			/* add flow entries as odflows based on primary flow criteria */
 			if (query.view == PROTO_VIEW) {
 				for (i = 0; i < nproto; i++){
 					pflow = odflow_addcount(&odproto[i]);
@@ -187,8 +187,23 @@ read_in(FILE *fp)
 static int
 is_filter(struct odflow *pip, struct odflow *pproto, uint64_t nproto)
 {
-	if (query.inflow.af != AF_UNSPEC){
-		// TODO
+	int ret = -1;
+	int i;
+
+	if (query.inflow.af == AF_UNSPEC)
+		ret = 0;
+	else if (query.inflow.af == AF_INET){
+		if (is_overlapped(pip, &query.inflow)){
+			ret = 0;
+		}
 	}
-	return 1;
+	else if (query.inflow.af == AF_INET6){
+		for (i = 0; i < nproto; i++){
+			if (is_overlapped(pproto, &query.inflow)){
+				ret = i;
+				break;
+			}
+		}
+	}
+	return ret;
 }

@@ -95,4 +95,6 @@ create_spec(struct odflow_spec *pspec, const int *label, int bytesize);
 
 void prefix_set(uint8_t *r0, uint8_t len, uint8_t *r1, int bytesize);
 int prefix_comp(uint8_t *r, uint8_t *r2, uint8_t len);
+int is_overlapped(struct odflow *p0, struct odflow *p1);
+
 #endif /* AGURIM_ODFLOW_H */

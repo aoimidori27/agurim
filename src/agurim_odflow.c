@@ -257,3 +257,20 @@ prefix_comp(uint8_t *r, uint8_t *r2, uint8_t len)
 
 	return ((*r & mask) - (*r2 & mask));
 }
+
+/* this function checks if does s1 includes s0. */
+int
+is_overlapped(struct odflow *p0, struct odflow *p1)
+{
+	if (p0->af != p1->af)
+		return 0;
+
+	if ((p0->spec.srclen > p1->spec.srclen) || (p0->spec.dstlen > p1->spec.dstlen))
+		return (0);
+
+	if (prefix_comp(p0->spec.src, p1->spec.src, p0->spec.srclen) != 0 || 
+	    prefix_comp(p0->spec.dst, p1->spec.dst, p0->spec.dstlen) != 0)
+		return (0);
+
+	return (1);
+}

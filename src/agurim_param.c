@@ -205,6 +205,9 @@ param_set_starttime(time_t t, int *exit_flg, int *agr_flg)
 		}
 	}
 
+	if (query.outfmt == REAGGREGATION)
+		return;
+
 	/* int duration = t - plot_timestamps[time_slot]; */
 	if ((inparam.cur_time - inparam.start_time) >= query.total_duration) {
 		*exit_flg = 1;
@@ -271,7 +274,6 @@ param_add_subflow(struct odflow *pflow)
 	//	list_free(pflow->cache);
 	list_add(inparam.subflow_list, pflow);
 }
-
 
 static void
 query_init(void)

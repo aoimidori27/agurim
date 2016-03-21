@@ -159,8 +159,9 @@ subflow_print(struct odflow *pflow)
 	struct odflow *psubflow;
 	uint64_t i;
 
+	printf("\t");
 	if ((plist == NULL) || (plist->size == 0)){
-		//printf("[*:*:*] 100.00%% 100.00%%");
+		printf("[*:*:*] 100.00%% 100.00%%");
 		goto end;
 	}
 	for (i = 0; i < plist->size; i++){

@@ -33,4 +33,4 @@ agurim: $(AGURIM_OBJS)
 install: $(PROG)
 	$(INSTALL) -m 0755 $(PROG) $(PREFIX)/bin
 
-clean:;	-rm -f $(PROG) *.o core *.core *~
+clean:;	-rm -f $(PROG) *.o $(UTIL_DIR)/*.o core *.core *~
